@@ -187,14 +187,14 @@ st.title("📹 动画角色检测")
 st.markdown("### 🌟 支持识别角色")
 cols = st.columns(8)
 characters = [
-    ("熊大","images/xiongda.png"),
-    ("黑猫警长","images/blackcat.png"),
-    ("葫芦娃","images/hulu.png"),
-    ("猪猪侠","images/zhuzhuxia.png"),
-    ("佩奇","images/peppa.png"),
-    ("喜羊羊","images/xiyangyang.png"),
-    ("汤姆猫", "images/tom.png"),
-    ("杰瑞鼠", "images/jerry.png"),
+    ("熊大","xiongda.png"),
+    ("黑猫警长","blackcat.png"),
+    ("葫芦娃","hulu.png"),
+    ("猪猪侠","zhuzhuxia.png"),
+    ("佩奇","peppa.png"),
+    ("喜羊羊","xiyangyang.png"),
+    ("汤姆猫", "tom.png"),
+    ("杰瑞鼠", "jerry.png"),
 ]
 
 for col,(name,img) in zip(cols,characters):
