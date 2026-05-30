@@ -20,7 +20,7 @@ st.markdown("""
 <style>
 /* 整体背景色 */
 .stApp{
-    background:#F5F7FA;  /* 浅灰蓝色，护眼 */
+   background:#EAF4FF;
 }
 
 /* 侧边栏背景色 */
@@ -162,7 +162,45 @@ if "shown_classes" not in st.session_state:
     st.session_state.shown_classes = set()
 
 # -------------------------- 界面 --------------------------
-st.title("📹 YOLO 动画角色检测")
+st.markdown("""
+<div style="
+position:relative;
+text-align:center;
+">
+<img src="https://cdn.jsdelivr.net/gh/Huluwa-create/animation-images@main/banner.png"
+     style="width:100%;border-radius:20px;">
+<div style="
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+color:white;
+font-size:50px;
+font-weight:bold;
+text-shadow:2px 2px 10px black;
+">
+🎬 动画角色智能识别
+</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("📹 动画角色检测")
+st.markdown("### 🌟 支持识别角色")
+cols = st.columns(8)
+characters = [
+    ("熊大","images/xiongda.png"),
+    ("黑猫警长","images/blackcat.png"),
+    ("葫芦娃","images/hulu.png"),
+    ("猪猪侠","images/zhuzhuxia.png"),
+    ("佩奇","images/peppa.png"),
+    ("喜羊羊","images/xiyangyang.png"),
+    ("汤姆猫", "images/tom.png"),
+    ("杰瑞鼠", "images/jerry.png"),
+]
+
+for col,(name,img) in zip(cols,characters):
+    with col:
+        st.image(img,width=100)
+        st.caption(name)
 st.divider()
 
 # -------------------------- 模式选择 --------------------------
@@ -432,3 +470,5 @@ elif mode == "视频检测":
 
         status.success(f"✅ 视频检测完成! 共处理 {frame_count} 帧, 耗时 {total_elapsed:.1f} 秒")
         fps_display.metric("平均处理帧率", f"{frame_count / total_elapsed:.1f} FPS")
+        #本地打开方式 终端输入streamlit run app.py
+        #在线打开方式 搜索地址https://animation-yolo-mwkx5rj8gesb3hmpzaqndv.streamlit.app/
