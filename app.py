@@ -7,7 +7,33 @@ import os
 from PIL import Image
 import tempfile
 import base64
+#-------------图片转base64函数--------------#
+def img_to_base64(path):
 
+    with open(path, "rb") as f:
+        return base64.b64encode(
+            f.read()
+        ).decode()
+#-------------音频播放函数--------------#
+def play_voice(mp3_path):
+
+    with open(mp3_path, "rb") as f:
+        audio_bytes = f.read()
+
+    b64 = base64.b64encode(
+        audio_bytes
+    ).decode()
+
+    st.markdown(
+        f"""
+        <audio autoplay>
+            <source
+            src="data:audio/mp3;base64,{b64}"
+            type="audio/mp3">
+        </audio>
+        """,
+        unsafe_allow_html=True
+    )
 # -------------------------- 页面配置 --------------------------
 st.set_page_config(
     page_title="YOLO 动画角色检测",
@@ -18,6 +44,74 @@ st.set_page_config(
 # -------------------------- 自定义按钮样式 --------------------------
 st.markdown("""
 <style>
+/* 角色图片 */
+.character-img{
+    width:110px;
+    height:110px;
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:4px solid white;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 20px rgba(135,206,250,0.8);
+
+    transition:all 0.3s ease;
+}
+
+/* 鼠标悬停放大 */
+.character-img:hover{
+    transform:scale(1.15);
+    box-shadow:
+        0 0 20px #87CEFA,
+        0 0 40px #87CEFA,
+        0 0 60px #87CEFA;
+}
+
+/* 角色名称按钮 */
+div.stButton > button{
+
+    width:100%;
+
+    border-radius:25px;
+
+    font-weight:bold;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #4facfe,
+        #00f2fe
+    );
+
+    border:none;
+
+    box-shadow:
+        0 0 10px rgba(79,172,254,0.7);
+
+    transition:all .3s ease;
+}
+
+/* 按钮悬停 */
+div.stButton > button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 15px #4facfe,
+        0 0 30px #00f2fe;
+
+    color:white;
+}
+
+/* 按钮点击 */
+div.stButton > button:active{
+    transform:scale(0.95);
+}
+
 /* 整体背景色 */
 .stApp{
    background:#EAF4FF;
@@ -99,6 +193,16 @@ animation_info = {
         "characters": ["黑猫警长", "白猫班长", "一只耳"],
         "link": "https://baike.baidu.com/item/黑猫警长"
     },
+    "Tom and Jerry Tom": {
+        "title": "猫和老鼠",
+        "image": "https://cdn.jsdelivr.net/gh/Huluwa-create/animation-images@main/tomjerry.png",
+        "year": "1940",
+        "country": "美国",
+        "genre": "喜剧",
+        "intro": "《猫和老鼠》（Tom and Jerry）是由威廉·汉纳与约瑟夫·巴伯拉于1939年为美国米高梅电影公司创作的喜剧动画短片，首部剧集《甜蜜的家》于1940年2月10日首播。该片以家猫汤姆与老鼠杰瑞的追逐打闹为主线，通过夸张的肢体喜剧展现两者日常冲突，弱化动物世界的暴力元素。汉纳与巴伯拉在1940至1958年间主导制作了114集短片，其中7集获得奥斯卡最佳动画短片奖。米高梅动画部曾于1957年、1967年两度关闭，期间吉恩·戴奇与查克·琼斯分别接手制作13集和34集。1975年汉纳与巴伯拉重新启动创作，延续经典IP生命力。汤姆的造型从四肢着地逐渐演变为直立拟人化，杰瑞则保持老鼠基本特征。动画于1970年引进中国台湾（译名“妙妙妙”），1980年代进入中国大陆，2017年登陆央视音乐频道。部分剧集因含吸烟镜头在英国播出时遭删减。",
+        "characters": ["Tom", "Jerry"],
+        "link": "https://baike.baidu.com/item/猫和老鼠"
+    },
     "Tom and Jerry Jerry": {
         "title": "猫和老鼠",
         "image": "https://cdn.jsdelivr.net/gh/Huluwa-create/animation-images@main/tomjerry.png",
@@ -167,7 +271,7 @@ st.markdown("""
 position:relative;
 text-align:center;
 ">
-<img src="https://cdn.jsdelivr.net/gh/Huluwa-create/animation-images@main/banner.png"
+<img src="https://cdn.jsdelivr.net/gh/Huluwa-create/animation-yolo@main/banner.png"
      style="width:100%;border-radius:20px;">
 <div style="
 position:absolute;
@@ -186,21 +290,44 @@ text-shadow:2px 2px 10px black;
 st.title("📹 动画角色检测")
 st.markdown("### 🌟 支持识别角色")
 cols = st.columns(8)
+voice_files = {
+    "熊大":"voice/xiongda.mp3",
+    "黑猫警长":"voice/heimao.mp3",
+    "葫芦娃":"voice/huluwa.mp3",
+    "猪猪侠":"voice/zhuzhuxia.mp3",
+    "佩奇":"voice/peppa.mp3",
+    "喜羊羊":"voice/xiyangyang.mp3",
+    "汤姆猫":"voice/tom.mp3",
+    "杰瑞鼠":"voice/jerry.mp3"
+}
 characters = [
-    ("熊大","xiongda.jpg"),
-    ("黑猫警长","blackcat.jpg"),
-    ("葫芦娃","hulu.jpg"),
-    ("猪猪侠","zhuzhuxia.jpg"),
-    ("佩奇","peppa.jpg"),
-    ("喜羊羊","xiyangyang.jpg"),
-    ("汤姆猫", "tom.jpg"),
-    ("杰瑞鼠", "jerry.jpg"),
+    ("熊大","images/xiongda.jpg"),
+    ("黑猫警长","images/blackcat.jpg"),
+    ("葫芦娃","images/hulu.jpg"),
+    ("猪猪侠","images/zhuzhuxia.jpg"),
+    ("佩奇","images/peppa.jpg"),
+    ("喜羊羊","images/xiyangyang.jpg"),
+    ("汤姆猫", "images/tom.jpg"),
+    ("杰瑞鼠", "images/jerry.jpg"),
 ]
 
 for col,(name,img) in zip(cols,characters):
+
     with col:
-        st.image(img,width=100)
-        st.caption(name)
+
+        st.image(
+            img,
+            width=110
+        )
+        if st.button(
+            f"{name}",
+            key=f"btn_{name}",
+            use_container_width=True
+        ):
+
+            play_voice(
+                voice_files[name]
+            )
 st.divider()
 
 # -------------------------- 模式选择 --------------------------
@@ -436,7 +563,16 @@ elif mode == "视频检测":
             if not ret:
                 break
 
-            results = model(frame, conf=conf_thresh, iou=iou_thresh)
+            detect_interval = 3
+
+            if frame_count % detect_interval == 0:
+                results = model(frame,
+                                conf=conf_thresh,
+                                iou=iou_thresh,
+                                verbose=False)
+                last_frame = results[0].plot()
+            else:
+                last_frame = frame
             res_frame = results[0].plot()
             rgb = cv2.cvtColor(res_frame, cv2.COLOR_BGR2RGB)
             stframe.image(rgb, channels="RGB", width=800)
@@ -456,7 +592,9 @@ elif mode == "视频检测":
             if detected_classes:
                 display_animation_info_nonblocking(detected_classes)
 
-            target_frame_time = 1.0 / original_fps
+            speed_factor = 2.0  # 播放速度加快2倍
+
+            target_frame_time = 1.0 / original_fps / speed_factor
             actual_elapsed = time.time() - start_time
             expected_time = frame_count * target_frame_time
             sleep_time = expected_time - actual_elapsed
