@@ -291,24 +291,24 @@ st.title("📹 动画角色检测")
 st.markdown("### 🌟 支持识别角色")
 cols = st.columns(8)
 voice_files = {
-    "熊大":"voice/xiongda.mp3",
-    "黑猫警长":"voice/heimao.mp3",
-    "葫芦娃":"voice/huluwa.mp3",
-    "猪猪侠":"voice/zhuzhuxia.mp3",
-    "佩奇":"voice/peppa.mp3",
-    "喜羊羊":"voice/xiyangyang.mp3",
-    "汤姆猫":"voice/tom.mp3",
-    "杰瑞鼠":"voice/jerry.mp3"
+    "熊大":"xiongda.mp3",
+    "黑猫警长":"heimao.mp3",
+    "葫芦娃":"huluwa.mp3",
+    "猪猪侠":"zhuzhuxia.mp3",
+    "佩奇":"peppa.mp3",
+    "喜羊羊":"xiyangyang.mp3",
+    "汤姆猫":"tom.mp3",
+    "杰瑞鼠":"jerry.mp3"
 }
 characters = [
-    ("熊大","images/xiongda.jpg"),
-    ("黑猫警长","images/blackcat.jpg"),
-    ("葫芦娃","images/hulu.jpg"),
-    ("猪猪侠","images/zhuzhuxia.jpg"),
-    ("佩奇","images/peppa.jpg"),
-    ("喜羊羊","images/xiyangyang.jpg"),
-    ("汤姆猫", "images/tom.jpg"),
-    ("杰瑞鼠", "images/jerry.jpg"),
+    ("熊大","xiongda.jpg"),
+    ("黑猫警长","blackcat.jpg"),
+    ("葫芦娃","hulu.jpg"),
+    ("猪猪侠","zhuzhuxia.jpg"),
+    ("佩奇","peppa.jpg"),
+    ("喜羊羊","xiyangyang.jpg"),
+    ("汤姆猫", "tom.jpg"),
+    ("杰瑞鼠", "jerry.jpg"),
 ]
 
 for col,(name,img) in zip(cols,characters):
