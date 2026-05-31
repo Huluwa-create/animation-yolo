@@ -344,7 +344,7 @@ with st.sidebar:
     st.header("⚙️ 参数设置")
     conf_thresh = st.slider("置信度", 0.1, 1.0, 0.3, 0.05)
     iou_thresh = st.slider("IOU", 0.1, 0.9, 0.45, 0.05)
-    st.info("低延迟模式")
+   
 
 # -------------------------- 显示动画百科资料 --------------------------
 if "shown_classes" not in st.session_state:
